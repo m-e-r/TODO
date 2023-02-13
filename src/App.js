@@ -1,26 +1,51 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {lazy, Suspense, useState} from 'react';
 import './App.css';
+import {BrowserRouter, Routes, Route, Link} from 'react-router-dom'
+import Frontpage from './Frontpage';
+import Task from "./Task";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const CreateTask = lazy(() => import("./CreateTask"));
+
+function App(props) {
+
+    const [tasks, setTasks] = useState(props.tasks);
+
+    const taskList = tasks.map((task) => (
+        <Task
+            id={task.id}
+            name={task.name}
+            completed={task.completed}
+            date={task.date}
+            key={task.id}
+            deleteTask={deleteTask}
+        />
+    ));
+
+    function addTask(name, date) {
+        const newTask = { id: tasks.length, name, completed: false, date};
+        console.log(newTask.id);
+        setTasks([...tasks, newTask]);
+    }
+
+    function deleteTask(id) {
+         const remainingTasks = tasks.filter((task) => id !== task.id);
+         setTasks(remainingTasks);
+    }
+
+    return (
+        <div className="todoapp stack-large">
+            <BrowserRouter>
+                <Suspense fallback="Loading...">
+                    <Link to={"/"}>Home</Link> | <Link to={"create"}>Create</Link>
+                    <Routes>
+                        <Route index element={<Frontpage taskList={taskList}/>} />
+                        <Route path={"/create"} element={<CreateTask addTask={addTask} />} />
+                    </Routes>
+                </Suspense>
+            </BrowserRouter>
+        </div>
+    );
 }
+
 
 export default App;

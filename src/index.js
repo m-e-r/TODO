@@ -5,10 +5,16 @@ import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 
+const DATA = [
+    { id: "todo-0", name: "Homework", completed: true, date:" 2/2/2"},
+    { id: "todo-1", name: "Clean the kitchen", completed: false, date:""},
+    { id: "todo-2", name: "Watch superbowl", completed: true, date:""}
+];
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <App tasks={DATA}/>
   </React.StrictMode>
 );
 
